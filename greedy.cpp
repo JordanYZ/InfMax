@@ -6,8 +6,6 @@
  ************************************************************************/
 
 #include "functions.h"
-#include<queue>
-#include<map>
 
 bool check_exist(int v, const vector<int> &seeds){
     for(int i=0;i<seeds.size();i++){
@@ -16,8 +14,8 @@ bool check_exist(int v, const vector<int> &seeds){
     return false;
 }
 
-bool check_queues_empty(map<int, queue<LevelNode> > &qs){
-    map< int,queue<LevelNode> >::iterator it;
+bool check_queues_empty(const map<int, queue<LevelNode> > &qs){
+    map< int,queue<LevelNode> >::const_iterator it;
     for(it=qs.begin();it!=qs.end();++it){
         if(it->second.empty()==false){
             return false;
@@ -26,7 +24,7 @@ bool check_queues_empty(map<int, queue<LevelNode> > &qs){
     return true;
 }
 
-void get_inf_matrix(const Graph &graph, Users &users, vector< vector<double> > &inf_matrix){
+void get_inf_matrix(const Graph &graph, const Users &users, vector< vector<double> > &inf_matrix){
     for(int i=0;i<graph.size();i++){
         vector<double> temp;
         inf_matrix.push_back(temp);
@@ -40,7 +38,7 @@ void get_inf_matrix(const Graph &graph, Users &users, vector< vector<double> > &
     }
 }
 
-double get_overall_opinion(const vector< vector<double> > &inf_matrix, const Graph &graph, Users &users, const vector<int> &seeds){
+double get_overall_opinion(const vector< vector<double> > &inf_matrix, const Graph &graph, const Users &users, const vector<int> &seeds){
 
     vector<double> user_weights;
 
@@ -104,11 +102,10 @@ double get_overall_opinion(const vector< vector<double> > &inf_matrix, const Gra
     return all_opinion;
 }
 
-void greedy(const Graph &graph, Users &users, int k){
+void greedy(const Graph &graph, const Users &users, int k, vector<int> &seeds){
     vector< vector<double> > inf_matrix;
     get_inf_matrix(graph, users,inf_matrix);
 
-    vector<int> seeds;
     for(int i=0;i<k;i++){
          double max_marg_opinion = 0.0;
          int new_seed=0;
@@ -119,6 +116,7 @@ void greedy(const Graph &graph, Users &users, int k){
              double new_opinion = get_overall_opinion(inf_matrix, graph, users, seeds);
              seeds.pop_back();
              double cur_marg_opinion = new_opinion-old_opinion;
+             cout<<j<<" as seed, marginal opiion:"<<cur_marg_opinion<<endl;
              if(cur_marg_opinion>max_marg_opinion){
                  max_marg_opinion = cur_marg_opinion;
                  new_seed = j;
@@ -127,4 +125,43 @@ void greedy(const Graph &graph, Users &users, int k){
          if(max_marg_opinion>0) seeds.push_back(new_seed);
          else if(max_marg_opinion==0) return;
     }
+}
+
+int main(){
+
+    Graph g;
+    Users u;
+
+    for(int i=0;i<10;i++){
+        Vertex v;
+        v.id = i;
+        v.name = "test";
+        v.activation_threshhold = 1;
+        v.activation_status = false;
+        v.opinion = 0.1*i/2;
+        u.push_back(v);
+    }
+
+    for(int i=0;i<u.size();i++){
+        vector<Edge> edges;
+        g.push_back(edges);
+        for(int j=0;j<u.size();j++){
+            if(i==j) continue;
+            Edge e;
+            e.from = i;
+            e.to = j;
+            e.weight = 0.5*i;
+            g[i].push_back(e);
+        }
+    }
+
+    vector<int> seeds;
+
+    greedy(g, u, 2, seeds);
+
+    for(int s=0;s<seeds.size();s++){
+        cout<<"seed: "<<seeds[s]<<endl;
+    }
+
+    return 0;
 }
