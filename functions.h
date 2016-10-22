@@ -8,5 +8,5 @@
 #include "graph.h"
 
 void greedy(const Graph &graph, Users &users);
-double get_overall_opinion(const Graph &graph, Users &users, vector<int> &seeds);
-double get_my_overall_opinion(const Graph &graph, Users &users, vector<int> &seeds);
+double get_overall_opinion(const Graph &graph, Users &users, const vector<int> &seeds);
+double get_my_overall_opinion(const Graph &graph, Users &users, const vector<int> &seeds);
