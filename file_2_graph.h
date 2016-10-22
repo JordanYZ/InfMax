@@ -14,7 +14,7 @@ public:
     void convert();
     void get_graph(Graph &g);
     void get_users(Users &u);
-protected:
+// protected:
     double get_weight();
     double get_opinion();
 private:
