@@ -35,9 +35,19 @@ int main(){
         }
     }
 
-    for(int i=0;i<u.size();i++){
+    // for(int i=0;i<u.size();i++){
+    //     for(int j=0;j<g[i].size();j++){
+    //         cout<<"from "<<i<<" to "<<j<<" weight:"<<g[i][j].weight<<endl;
+    //     }
+    // }
+
+    Distances dist;
+
+    get_all_pair_shortest_path(g, dist);
+
+    for(int i=0;i<g.size();i++){
         for(int j=0;j<g[i].size();j++){
-            cout<<"from "<<i<<" to "<<j<<" weight:"<<g[i][j].weight<<endl;
+            cout<<i<<" to "<<j<<" is "<<dist[i][j]<<endl;
         }
     }
 
